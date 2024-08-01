@@ -5,3 +5,4 @@ omit =
     manage.py
     core/asgi.py
     core/wsgi.py
+    frontend/*
