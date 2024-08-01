@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+
+{% block title %}People List{% endblock %}
+
+{% block content %}
+<h2>People List</h2>
+<form method="get" class="form-inline">
+    <div class="form-group mb-2">
+        <input type="text" class="form-control" name="search" placeholder="Search" value="{{ request.GET.search }}">
+    </div>
+    <button type="submit" class="btn btn-primary mb-2">Search</button>
+    <a href="{% url 'person_create' %}" class="btn btn-success mb-2">Create New Person</a>
+</form>
+<table class="table">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Email</th>
+            <th>Phone Number</th>
+            <th>Agency</th>
+            <th>Balance</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for person in people %}
+        <tr>
+            <td>{{ person.id }}</td>
+            <td>{{ person.first_name }}</td>
+            <td>{{ person.last_name }}</td>
+            <td>{{ person.email }}</td>
+            <td>{{ person.phone_number }}</td>
+            <td>{{ person.agency.name }}</td>
+            <td>{{ person.balance }}</td>
+
+            <td>
+                {% comment %} <a href="{% url 'person_detail' person.id %}" class="btn btn-info btn-sm">View</a> {% endcomment %}
+                {% comment %} <a href="{% url 'person_update' person.id %}" class="btn btn-warning btn-sm">Edit</a> {% endcomment %}
+                {% comment %} <form method="post" action="{% url 'person_delete' person.id %}" style="display:inline;">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                </form> {% endcomment %}
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

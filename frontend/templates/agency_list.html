@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% block title %}Agencies{% endblock %}
+
+{% block content %}
+<h2>Agencies</h2>
+<form method="get">
+    <input type="text" name="search" placeholder="Search">
+    <button type="submit" class="btn btn-primary">Search</button>
+</form>
+<table class="table">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Address</th>
+            <th>Phone Number</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for agency in agencies %}
+        <tr>
+            <td>{{ agency.id }}</td>
+            <td>{{ agency.name }}</td>
+            <td>{{ agency.address }}</td>
+            <td>{{ agency.phone_number }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}
