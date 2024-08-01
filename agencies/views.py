@@ -1,4 +1,4 @@
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework import status
 
@@ -10,9 +10,12 @@ from .use_cases.update_agency import UpdateAgency
 from .use_cases.delete_agency import DeleteAgency
 from .use_cases.retrieve_agency import RetrieveAgency
 
+from rest_framework.permissions import IsAuthenticated
+
 repository = AgencyRepository()
 
 @api_view(['GET'])
+@permission_classes([IsAuthenticated])
 def list_agencies(request):
     use_case = ListAgencies(repository)
     filters = request.query_params.dict()
@@ -23,6 +26,7 @@ def list_agencies(request):
     return Response(serializer.data)
 
 @api_view(['POST'])
+@permission_classes([IsAuthenticated])
 def create_agency(request):
     use_case = CreateAgency(repository)
     serializer = AgencySerializer(data=request.data)
@@ -32,6 +36,7 @@ def create_agency(request):
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['PUT'])
+@permission_classes([IsAuthenticated])
 def update_agency(request, agency_id):
     use_case = UpdateAgency(repository)
     serializer = AgencySerializer(data=request.data)
@@ -41,12 +46,14 @@ def update_agency(request, agency_id):
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['DELETE'])
+@permission_classes([IsAuthenticated])
 def delete_agency(request, agency_id):
     use_case = DeleteAgency(repository)
     use_case.execute(agency_id)
     return Response(status=status.HTTP_204_NO_CONTENT)
 
 @api_view(['GET'])
+@permission_classes([IsAuthenticated])
 def retrieve_agency(request, agency_id):
     use_case = RetrieveAgency(repository)
     agency = use_case.execute(agency_id)
