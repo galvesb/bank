@@ -4,7 +4,6 @@ from agencies.serializers import AgencySerializer
 
 class PersonSerializer(serializers.ModelSerializer):
     agency = AgencySerializer()
-
     class Meta:
         model = Person
         fields = ['id', 'first_name', 'last_name', 'email', 'phone_number', 'balance', 'agency']
