@@ -1,4 +1,4 @@
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework import status
 
@@ -13,9 +13,12 @@ from .use_cases.deposit_money import DepositMoney
 from .use_cases.withdraw_money import WithdrawMoney
 from .use_cases.transfer_money import TransferMoney
 
+from rest_framework.permissions import IsAuthenticated
+
 repository = PersonRepository()
 
 @api_view(['GET'])
+@permission_classes([IsAuthenticated])
 def list_people(request):
     use_case = ListPeople(repository)
     filters = request.query_params.dict()
@@ -26,6 +29,7 @@ def list_people(request):
     return Response(serializer.data)
 
 @api_view(['POST'])
+@permission_classes([IsAuthenticated])
 def create_person(request):
     use_case = CreatePerson(repository)
     serializer = PersonCreateUpdateSerializer(data=request.data)
@@ -35,6 +39,7 @@ def create_person(request):
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['PUT'])
+@permission_classes([IsAuthenticated])
 def update_person(request, person_id):
     use_case = UpdatePerson(repository)
     serializer = PersonCreateUpdateSerializer(data=request.data)
@@ -44,12 +49,14 @@ def update_person(request, person_id):
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['DELETE'])
+@permission_classes([IsAuthenticated])
 def delete_person(request, person_id):
     use_case = DeletePerson(repository)
     use_case.execute(person_id)
     return Response(status=status.HTTP_204_NO_CONTENT)
 
 @api_view(['GET'])
+@permission_classes([IsAuthenticated])
 def retrieve_person(request, person_id):
     use_case = RetrievePerson(repository)
     person = use_case.execute(person_id)
@@ -57,6 +64,7 @@ def retrieve_person(request, person_id):
     return Response(serializer.data)
 
 @api_view(['POST'])
+@permission_classes([IsAuthenticated])
 def deposit_money(request, person_id):
     amount = request.data.get('amount')
     if amount is None:
@@ -70,6 +78,7 @@ def deposit_money(request, person_id):
         return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['POST'])
+@permission_classes([IsAuthenticated])
 def withdraw_money(request, person_id):
     amount = request.data.get('amount')
     if amount is None:
@@ -83,6 +92,7 @@ def withdraw_money(request, person_id):
         return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['POST'])
+@permission_classes([IsAuthenticated])
 def transfer_money(request):
     from_person_id = request.data.get('from_person_id')
     to_person_id = request.data.get('to_person_id')
